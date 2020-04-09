@@ -1,11 +1,20 @@
 package com.trex.api.authentication;
 
-public class User {
+public class UserInfo {
+	private long id;
 	private String firstName;
 	private String middleName;
 	private String lastName;
 	private String userName;
 	private String password;
+	
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		 this.id = id;
+	}
 	
 	public String getFirstName() {
 		return firstName;
