@@ -18,12 +18,12 @@ public class UserPersitor {
 	private final String GET_USER_BY_USERNAME = "SELECT * FROM users WHERE userName = ?;";
 
 	
-	public UserInfo getUserInfoByUserName(String userName) {
-		
-		try {
-			return jdbcTemplate.queryForObject(GET_USER_BY_USERNAME, new Object[]{userName}, (ResultSet rs, int rowNum) -> {
-	            UserInfo userInfo = new UserInfo();
+	public UserInfo getUserInfoByUserName(String userName) {	
+		return jdbcTemplate.query(GET_USER_BY_USERNAME, new Object[]{userName}, rs -> {
 
+            if(rs.next()){
+            	UserInfo userInfo = new UserInfo();
+            	
 	            userInfo.setId(rs.getLong("id"));
 	            userInfo.setFirstName(rs.getString("firstName"));
 	            userInfo.setMiddleName(rs.getString("middleName"));
@@ -31,17 +31,12 @@ public class UserPersitor {
 	            userInfo.setUserName(rs.getString("userName"));
 	            userInfo.setPassword(rs.getString("password"));	
 
-	            return userInfo;
-	        });		
-	     
-		} catch (DataAccessException e) {
-			System.out.println(e);
-//			TODO: Handle expections
-		} catch (Exception e) {
-			System.out.println(e);
-//			TODO: Handle expections
-		}
-		return null;
+	            return userInfo;	       
+            } else {
+                return null;
+            }
+	    });
+		
 	}
 	
 }

@@ -41,9 +41,14 @@ public class JwtUserDetailsService implements UserDetailsService {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
+			throw e;
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+//			TODO: handle logging
+			System.out.println(e.getMessage());
+			System.out.println(e);
+			throw new InvalidCredentialsException("Invalid username/password");
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 

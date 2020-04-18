@@ -26,7 +26,9 @@ import com.trex.api.base.BaseController;
 import com.trex.api.security.JwtRequest;
 import com.trex.api.security.JwtResponse;
 import com.trex.api.security.JwtTokenUtil;
+import com.trex.api.security.UnauthorizedResponse;
 import com.trex.api.authentication.AuthConstants;
+import com.trex.api.authentication.InvalidCredentialsException;
 import com.trex.api.authentication.JwtUserDetailsService;
 
 
@@ -41,23 +43,27 @@ public class JwtAuthenticationController extends BaseController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 	
-
+	@Autowired
+	private UserService authService;
 	
-	public JwtAuthenticationController(UserService authService) {
-		this._authService = authService;
-	}
 	
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> login(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		//Authenticates Username and Password 
-		userDetailsService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		try {
+			userDetailsService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		} catch(InvalidCredentialsException e) {
+			UnauthorizedResponse unAuthresponse = new UnauthorizedResponse();
+			unAuthresponse.setMessage(e.getMessage());
+			return new ResponseEntity<>(unAuthresponse, HttpStatus.UNAUTHORIZED);
+		}
 		
 		//Loads the users detail from db
 		final UserDetails userDetails = userDetailsService
 		.loadUserByUsername(authenticationRequest.getUsername());
 	
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		return ResponseEntity.ok(new JwtResponse(token));
+		return new ResponseEntity<>(new JwtResponse(token), HttpStatus.OK);
 		
 	}
 	
@@ -69,7 +75,7 @@ public class JwtAuthenticationController extends BaseController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signUp(@RequestBody UserInfo user) throws Exception {
-		_authService.createUser(user);
+		authService.createUser(user);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
