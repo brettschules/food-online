@@ -38,6 +38,7 @@ public class UserService {
 				user.getUserName(),
 				pw_hash
 				);
+		//TODO: Have db return userId
 		return 1;
 	}
 	

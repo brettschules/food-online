@@ -67,7 +67,7 @@ public class JwtAuthenticationController extends BaseController {
 		
 	}
 	
-	@GetMapping("/hi")
+	@GetMapping("/admin")
 	public ResponseEntity<?> hi() throws Exception {
 		
 		return ResponseEntity.ok("hi");

@@ -1,5 +1,7 @@
 package com.trex.api.authentication;
 
+import java.util.List;
+
 public class UserInfo {
 	private long id;
 	private String firstName;
@@ -7,7 +9,9 @@ public class UserInfo {
 	private String lastName;
 	private String userName;
 	private String password;
+	private List<String> roles;
 	
+
 	public long getId() {
 		return id;
 	}
@@ -45,5 +49,11 @@ public class UserInfo {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public List<String> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 }

@@ -15,8 +15,12 @@ public class UserPersitor {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	
+	//TODO: Make a stored proc to get user and roles info
 	private final String GET_USER_BY_USERNAME = "SELECT * FROM users WHERE userName = ?;";
-
+	
+	private final String GET_USER_ROLES_BY_USERID = "select * from user_roles ur\n" + 
+			"inner join users u on u.id = ur.userId;";
 	
 	public UserInfo getUserInfoByUserName(String userName) {	
 		return jdbcTemplate.query(GET_USER_BY_USERNAME, new Object[]{userName}, rs -> {

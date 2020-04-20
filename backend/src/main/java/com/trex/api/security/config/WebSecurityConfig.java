@@ -53,12 +53,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// We don't need CSRF for this example
+		//TODO: need to enable csrf
 		httpSecurity.csrf().disable()
 				// dont authenticate this the following requests
-				.authorizeRequests().antMatchers("/v1/rest/api/authenticate", "/v1/rest/api/signup").permitAll().
+				.authorizeRequests().antMatchers("/v1/rest/api/authenticate", "/v1/rest/api/signup").permitAll()
 				// all other requests need to be authenticated
-				anyRequest().authenticated()
+				.antMatchers("/v1/rest/api/admin").hasRole("ADMIN")				
+				.anyRequest().authenticated()
 				.and()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 				.and()
